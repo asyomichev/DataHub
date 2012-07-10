@@ -11,7 +11,11 @@ public class WelcomeServlet extends HttpServlet {
 	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        resp.getWriter().print("Hello from Java!\n");
+		String dbUrl = System.getenv("DATABASE_URL");
+		if (null == dbUrl)
+			dbUrl = "none";
+			
+        resp.getWriter().print("DATABASE_URL=" + dbUrl + "\n");
     }
 	
 	public static void main(String[] args) throws Exception {

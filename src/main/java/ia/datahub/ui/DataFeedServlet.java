@@ -1,5 +1,6 @@
 package ia.datahub.ui;
 
+import ia.datahub.beans.Podracer;
 import ia.datahub.scraper.PodracerScraper;
 
 import java.io.IOException;
@@ -8,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
@@ -18,8 +22,10 @@ import org.eclipse.jetty.servlet.*;
  * A one-button data feed initiation UI
  */
 public class DataFeedServlet extends HttpServlet {
+	private static EntityManagerFactory emf;
+    private static EntityManager em;
 
-	@Override
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException 
     {
@@ -41,13 +47,25 @@ public class DataFeedServlet extends HttpServlet {
 			pw.println("</form>");
 			pw.println("<p>");
 			List<Map<String, String>> results = PodracerScraper.scrapePodracers();
-			for (Map<String, String> podracer : results)
+			for (Map<String, String> podracerAttrs : results)
 			{
-				pw.println("<h3>" + podracer.get("Model") + "</h3>");
-				for (Entry<String, String> e : podracer.entrySet())
+				pw.println("<h3>" + podracerAttrs.get("Model") + "</h3>");
+				for (Entry<String, String> e : podracerAttrs.entrySet())
 				{
 					pw.println("<br>" + e.getKey() + ":" + e.getValue());
 				}
+				
+				Podracer podracerBean = new Podracer(podracerAttrs);
+				try
+				{
+					em.getTransaction().begin();
+			        em.persist(podracerBean);
+			        em.getTransaction().commit();
+				} catch (javax.persistence.EntityExistsException ex)
+				{
+					pw.println("ERROR: duplicate model name, ignored");
+			        em.getTransaction().rollback();
+				} 
 			}
 			pw.println("</p>");
 		}
@@ -55,6 +73,9 @@ public class DataFeedServlet extends HttpServlet {
 
 	// A container-less entry point - starts a simple jetty handler
 	public static void main(String[] args) throws Exception {
+		emf = Persistence.createEntityManagerFactory("persistenceUnit");
+        em = emf.createEntityManager();		
+		
         Server server = new Server(Integer.valueOf(System.getenv("PORT")));
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");

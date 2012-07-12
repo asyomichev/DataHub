@@ -1,1 +1,1 @@
-web:	java -cp target/classes:target/dependency/* ia.example.DataFeedServlet
+web:	java -cp target/classes:target/dependency/* ia.datahub.ui.DataFeedServlet

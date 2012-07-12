@@ -1,1 +1,1 @@
-web:	java -cp target/classes:target/dependency/* ia.example.WelcomeServlet
+web:	java -cp target/classes:target/dependency/* ia.example.DataFeedServlet

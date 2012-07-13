@@ -15,6 +15,7 @@
   <classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/jetty-io/7.6.0.v20120127/jetty-io-7.6.0.v20120127.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/jetty-util/7.6.0.v20120127/jetty-util-7.6.0.v20120127.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jsoup/jsoup/1.6.3/jsoup-1.6.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/postgresql/postgresql/9.1-901.jdbc3/postgresql-9.1-901.jdbc3.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate-core/3.6.9.Final/hibernate-core-3.6.9.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/antlr/antlr/2.7.6/antlr-2.7.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>

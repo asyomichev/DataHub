@@ -33,6 +33,7 @@ public class DataFeedServlet extends HttpServlet {
         if (req.getParameter("op") == null) {
             // Invoked with no parameter - initial page
             pw.println("<h1>Data Feed</h1>");
+            pw.println("<a href='/podracer'>Inspect currently loaded podracer data</a>");
             pw.println("<form action='DataFeedServlet' method='get'>");
             pw.println("<input type='submit' value='Update'/>");
             pw.println("<input type='hidden' name='op' value='Update'/>");
@@ -40,6 +41,7 @@ public class DataFeedServlet extends HttpServlet {
         } else {
             // Invoked with a parameter - run the update
             pw.println("<form action='DataFeedServlet' method='get'>");
+            pw.println("<a href='/podracer'>Inspect currently loaded podracer data</a>");
             pw.println("<input type='submit' value='Update again'/>");
             pw.println("<input type='hidden' name='op' value='Update'/>");
             pw.println("</form>");

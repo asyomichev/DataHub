@@ -89,7 +89,7 @@ public class Podracer {
         generateRecalls();
     }
 
-    private void generateRecalls() {
+    public void generateRecalls() {
         final String[] variants = {"SERVICE BRAKES, AIR:ANTILOCK:WHEEL SPEED SENSOR", 
                                    "STEERING:COLUMN",
                                    "ELECTRICAL SYSTEM:FUSES AND CIRCUIT BREAKERS",

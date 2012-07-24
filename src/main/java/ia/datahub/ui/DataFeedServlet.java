@@ -30,22 +30,19 @@ public class DataFeedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter pw = resp.getWriter();
-        if (req.getParameter("op") == null) {
-            // Invoked with no parameter - initial page
-            pw.println("<h1>Data Feed</h1>");
-            pw.println("<a href='/podracer'>Inspect currently loaded podracer data</a>");
-            pw.println("<form action='DataFeedServlet' method='get'>");
-            pw.println("<input type='submit' value='Update'/>");
-            pw.println("<input type='hidden' name='op' value='Update'/>");
-            pw.println("</form>");
-        } else {
+
+        pw.println("<form action='DataFeedServlet' method='get'>");
+        pw.println("<a href='/podracer'>Inspect currently loaded podracer data</a>");
+        pw.println("<p><input type='radio' name='op' value='Update'/>Update all from WookieePedia<br/>");
+        pw.println("<input type='radio' name='op' value='AddRecalls' checked='true'/>");
+        pw.println("Generate additional recall information<br/>");
+        pw.println("<input type='submit' value='Run'/>");
+        pw.println("</form>");
+        pw.println("<p>");
+
+        String op = req.getParameter("op");
+        if (op != null && op.equals("Update")) {
             // Invoked with a parameter - run the update
-            pw.println("<form action='DataFeedServlet' method='get'>");
-            pw.println("<a href='/podracer'>Inspect currently loaded podracer data</a>");
-            pw.println("<input type='submit' value='Update again'/>");
-            pw.println("<input type='hidden' name='op' value='Update'/>");
-            pw.println("</form>");
-            pw.println("<p>");
             List<Map<String, String>> results = PodracerScraper.scrapePodracers();
             for (Map<String, String> podracerAttrs : results) {
                 pw.println("<h3>" + podracerAttrs.get("Model") + "</h3>");
@@ -57,7 +54,7 @@ public class DataFeedServlet extends HttpServlet {
                 try {
                     em.getTransaction().begin();
                     for (Recall r : podracerBean.getRecalls())
-                    {
+                    {   
                         em.persist(r);
                     }
                     em.persist(podracerBean);
@@ -66,6 +63,28 @@ public class DataFeedServlet extends HttpServlet {
                     pw.println("ERROR: duplicate model name, ignored");
                     em.getTransaction().rollback();
                 }
+                pw.println("<p>" + podracerBean.getRecalls().size() + " recalls</p>");
+            }
+            pw.println("</p>");
+        } else if (op != null && op.equals("AddRecalls")) {
+            // Invoked with a parameter - generate more recalls
+            try {
+                em.getTransaction().begin();
+                for (Podracer p : em.createQuery("SELECT p FROM Podracer p", Podracer.class).getResultList())
+                {
+                    p.generateRecalls();
+                    for (Recall r : p.getRecalls())
+                    {
+                        em.persist(r);
+                    }
+                    em.persist(p);
+                    pw.println("<h3>" + p.model + "</h3>");
+                    pw.println("<p>" + p.getRecalls().size() + " recalls</p>");
+                }
+                em.getTransaction().commit();
+            } catch (javax.persistence.EntityExistsException ex) {
+                pw.println("ERROR: " + ex.getMessage());
+                em.getTransaction().rollback();
             }
             pw.println("</p>");
         }

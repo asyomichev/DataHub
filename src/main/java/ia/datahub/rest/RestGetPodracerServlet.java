@@ -60,10 +60,13 @@ public class RestGetPodracerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String decodedUri = URLDecoder.decode(req.getRequestURI());
+        System.out.println("In doPut, decodedUri = " + decodedUri);
         String[] uriParts = decodedUri.split("/");
         if (uriParts.length > 2)
         {
             String podracerModel = uriParts[2];
+            System.out.println("In doPut, podracerModel = " + podracerModel);
+            
             Podracer p = em.find(Podracer.class, podracerModel);
             String line;
             while (null != (line = req.getReader().readLine())) {

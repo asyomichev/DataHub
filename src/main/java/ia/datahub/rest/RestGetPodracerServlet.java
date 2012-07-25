@@ -28,7 +28,8 @@ public class RestGetPodracerServlet extends HttpServlet {
     public RestGetPodracerServlet(EntityManager em) {
         this.em = em;
     }
-    
+
+    /** Return podracer details in "Name: Value" format, with recalls listed at the end on multiple lines */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter pw = resp.getWriter();
@@ -54,5 +55,30 @@ public class RestGetPodracerServlet extends HttpServlet {
             }
         }
     }
+    
+    /** Update podracer details based on "Name: Value" format */
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String decodedUri = URLDecoder.decode(req.getRequestURI());
+        String[] uriParts = decodedUri.split("/");
+        if (uriParts.length > 2)
+        {
+            String podracerModel = uriParts[2];
+            Podracer p = em.find(Podracer.class, podracerModel);
+            String line;
+            while (null != (line = req.getReader().readLine())) {
+                String[] nv = line.split(":");
+                if (2 == nv.length && nv[0].equals("Max speed"))
+                {
+                    em.getTransaction().begin();
+                    p.maxSpeed = nv[1];
+                    em.persist(p);
+                    em.getTransaction().commit();
+                }
+            }
+        }
+    }      
 
 }
+
+

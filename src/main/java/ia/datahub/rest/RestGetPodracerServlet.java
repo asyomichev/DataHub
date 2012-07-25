@@ -39,14 +39,18 @@ public class RestGetPodracerServlet extends HttpServlet {
         {
             String podracerModel = uriParts[2];
             Podracer p = em.find(Podracer.class, podracerModel);
-            pw.println("Model: " + p.model);
-            pw.println("Manufacturer: " + p.manufacturer);
-            pw.println("Class: " + p.craftClass);
-            pw.println("Max speed: " + p.maxSpeed);
-            pw.println("Recalls:");
-            for (Recall r : p.getRecalls())
-            {
-                pw.println(r.description);
+            if (null != p) {
+                pw.println("Model: " + p.model);
+                pw.println("Manufacturer: " + p.manufacturer);
+                pw.println("Class: " + p.craftClass);
+                pw.println("Max speed: " + p.maxSpeed);
+                pw.println("Recalls:");
+                for (Recall r : p.getRecalls())
+                {
+                    pw.println(r.description);
+                }
+            } else {
+                pw.println("Not found");
             }
         } else {
             for (Podracer p : em.createQuery("SELECT p FROM Podracer p", Podracer.class).getResultList())
@@ -70,9 +74,12 @@ public class RestGetPodracerServlet extends HttpServlet {
             Podracer p = em.find(Podracer.class, podracerModel);
             String line;
             while (null != (line = req.getReader().readLine())) {
+                System.out.println("in doPut, next line = " + line);
                 String[] nv = line.split(":");
+                System.out.println("in doPut, nv size = " + nv.length);
                 if (2 == nv.length && nv[0].equals("Max speed"))
                 {
+                    System.out.println("in doPut, max speed = " + nv[1]);
                     em.getTransaction().begin();
                     p.maxSpeed = nv[1];
                     em.persist(p);

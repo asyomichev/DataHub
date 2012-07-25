@@ -64,22 +64,17 @@ public class RestGetPodracerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String decodedUri = URLDecoder.decode(req.getRequestURI());
-        System.out.println("In doPut, decodedUri = " + decodedUri);
         String[] uriParts = decodedUri.split("/");
         if (uriParts.length > 2)
         {
             String podracerModel = uriParts[2];
-            System.out.println("In doPut, podracerModel = " + podracerModel);
             
             Podracer p = em.find(Podracer.class, podracerModel);
             String line;
             while (null != (line = req.getReader().readLine())) {
-                System.out.println("in doPut, next line = " + line);
                 String[] nv = line.split(":");
-                System.out.println("in doPut, nv size = " + nv.length);
-                if (2 == nv.length && nv[0].equals("Max speed"))
+                if (2 == nv.length && nv[0].equals("Maximum speed"))
                 {
-                    System.out.println("in doPut, max speed = " + nv[1]);
                     em.getTransaction().begin();
                     p.maxSpeed = nv[1];
                     em.persist(p);

@@ -101,10 +101,9 @@ public class Podracer {
                                   };
         Random rnd = new Random();
         int numRecalls = rnd.nextInt(8);
-        String prefix = String.format("RC%d ", rnd.nextInt(1024) + 1024);
         while (numRecalls-- > 0)
         {
-            String desc = prefix + variants[rnd.nextInt(variants.length)];
+            String desc = variants[rnd.nextInt(variants.length)];
             recalls.add(new Recall(desc));
         }
     }

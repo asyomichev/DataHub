@@ -47,6 +47,7 @@ public class RestGetPodracerServlet extends HttpServlet {
                 pw.println("Recalls:");
                 for (Recall r : p.getRecalls())
                 {
+                    System.out.println("recall " + r.id + " : " + r.description);
                     pw.println(r.description);
                 }
             } else {

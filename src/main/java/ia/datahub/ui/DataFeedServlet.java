@@ -109,8 +109,8 @@ public class DataFeedServlet extends HttpServlet {
         
         // Add OData servlets
         ServletHolder servletOData = new ServletHolder(new ServletContainer());
-        servletOData.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "org.odata4j.producer.resources.ODataResourceConfig");
-        servletOData.setInitParameter("odata4j.producerfactory", "org.odata4j.heroku.HerokuPostgresProducerFactory");
+        servletOData.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "ia.datahub.odata.ODataResourceConfig");
+        servletOData.setInitParameter("odata4j.producerfactory", "ia.datahub.odata.HerokuPostgresProducerFactory");
         context.addServlet(servletOData, "/DataHub.svc/*");
 
         

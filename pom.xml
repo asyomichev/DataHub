@@ -88,6 +88,16 @@
             <artifactId>jta</artifactId>
             <version>1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-core</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-jersey</artifactId>
+            <version>0.7.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

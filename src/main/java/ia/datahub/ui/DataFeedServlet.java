@@ -20,6 +20,9 @@ import javax.servlet.http.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.*;
 
+import com.sun.jersey.spi.container.servlet.ServletContainer;
+
+
 /**
  * A one-button data feed initiation UI
  */
@@ -99,8 +102,18 @@ public class DataFeedServlet extends HttpServlet {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
+        
+        // Add REST servlets
         context.addServlet(new ServletHolder(new RestGetPodracerServlet(em)), "/podracer/*");
         context.addServlet(new ServletHolder(new DataFeedServlet()), "/*");
+        
+        // Add OData servlets
+        ServletHolder servletOData = new ServletHolder(new ServletContainer());
+        servletOData.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "org.odata4j.producer.resources.ODataResourceConfig");
+        servletOData.setInitParameter("odata4j.producerfactory", "org.odata4j.heroku.HerokuPostgresProducerFactory");
+        context.addServlet(servletOData, "/DataHub.svc/*");
+
+        
         server.start();
         server.join();
     }
